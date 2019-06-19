@@ -54,6 +54,7 @@ dataset["mean_word_len"] = dataset["Message"].apply(lambda x: np.mean([len(w) fo
 import matplotlib.pyplot as plt
 import seaborn as sns
 color = sns.color_palette()
+
 dataset['num_words'].loc[dataset['num_words']>80] = 80 #truncated for better visuals
 plt.figure(figsize=(12,8))
 sns.pointplot(x='Name', y='num_words', data=dataset)
