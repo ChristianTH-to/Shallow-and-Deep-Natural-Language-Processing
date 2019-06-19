@@ -187,6 +187,7 @@ from nltk.corpus import stopwords
 from stop_words import get_stop_words
 from nltk.stem.porter import PorterStemmer 
 from gensim.parsing.preprocessing import STOPWORDS
+
 corpus = []
 for i in range(0, 38954):
     clean_text = re.sub('[^a-zA-Z]', ' ', str(dataset['Message'][i]))
