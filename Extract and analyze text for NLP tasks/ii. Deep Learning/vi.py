@@ -61,11 +61,11 @@ format so that they could be used with Tensorflows embedding projector.'''
 # Copyright (C) 2016 Silvio Olivastri <silvio.olivastri@gmail.com>
 # Copyright (C) 2016 Radim Rehurek <radim@rare-technologies.com>
 
-Command line arguments
+'''Command line arguments
 ----------------------
 
 .. program-output:: python -m gensim.scripts.word2vec2tensor --help
-   :ellipsis: 0, -7
+   :ellipsis: 0, -7'''
 
 # Dependencies
 
@@ -120,4 +120,4 @@ if __name__ == "__main__":
 
     # Run the source code above in the terminal with these commands
     
-    # Christians-MBP: Desktop christianth$ python3 -m gensim.scripts.word2vec2tensor -i bt_4_2vec.txt -o Desktop
+    # $ python3 -m gensim.scripts.word2vec2tensor -i bt_4_2vec.txt -o Desktop
