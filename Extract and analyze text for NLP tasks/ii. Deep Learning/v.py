@@ -21,6 +21,7 @@ plt.show()
 # LeakyreLU
 
 import numpy as np
+
 class Activation(object):
     def __init__(self, x):
         self.x = x
