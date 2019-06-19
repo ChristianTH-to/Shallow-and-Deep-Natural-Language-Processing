@@ -25,6 +25,7 @@ d = csv.writer(open('bt_name_data_R.csv', 'w'))
 d.writerow('Name')
 
 data_name = soup.find_all('div', class_ = '_3-96 _2pio _2lek _2lel')
+
 for data_name in data_name:
     names = data_name.contents
     d.writerow(names)
@@ -38,6 +39,7 @@ d = csv.writer(open('bt_date_data_R.csv', 'w'))
 d.writerow(['Date & Time'])
 
 data_date_time = soup.find_all('div', class_ = '_3-94 _2lem')
+
 for data_date_time in data_date_time:
     dates_times = data_date_time.contents
     d.writerow(dates_times)  
@@ -53,6 +55,7 @@ d = csv.writer(open('bt_message_data.csv', 'w'))
 
 d.writerow(['Message'])
 data_message = soup.find_all('div', class_ = '_3-96 _2let')
+
 for data_message in data_message:
     messages = data_message.get('_3-96 _2let')
     d.writerow([messages])
