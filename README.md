@@ -19,17 +19,17 @@ Preserved a global view of user topics and distilled each user into a mixture of
 
 i. Extraction and Exploration
 
-	i. Extraction, exploration, feature extraction, initial cleaning & commonword visualization
+	 i. Extraction, exploration, feature extraction, initial cleaning & commonword visualization
 	ii. Zipf’s Law
-	iii. Feature distributions by user and more cleaning
+       iii. Feature distributions by user and more cleaning
 
 ii. Deep Learning
 
 	iv. Additional exploration with Word2vec and GloVe
-	v. Softmax, LeakyReLU and Sigmoid visualizations 
+	 v. Softmax, LeakyReLU and Sigmoid visualizations 
 	vi. Export Word2vec embeddings
-	vii. Diagnosing text using edm
-	viii. Attention based bidirectional lstm rnn
+       vii. Diagnosing text using edm
+      viii. Attention based bidirectional lstm rnn
 
 iii. Shallow learning and topic modeling
 
@@ -40,10 +40,10 @@ iii. Shallow learning and topic modeling
 		iii. xgboost 
 		iv. support vector machines
 
-	x. Topic modeling with vanilla-lda
+         x. Topic modeling with vanilla-lda
 	xi. L-lda implementation with inference via Gibbs sampling
-	xii. Defined l-lda seeds
-	xiii. Compare distance of user probability distributions
+       xii. Defined l-lda seeds
+      xiii. Compare distance of user probability distributions
   
   
  You can find the original blog post <a href="https://www.xtiandata.com/single-post/2018/10/26/Shallow-Deep-Natural-Language-Processing" rel="nofollow">here</a></li>.
