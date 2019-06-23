@@ -381,6 +381,7 @@ print(history.history['val_ck'])
 
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as pyplot
+
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
 pyplot.plot(history.history['loss'])
 pyplot.plot(history.history['val_loss'])
