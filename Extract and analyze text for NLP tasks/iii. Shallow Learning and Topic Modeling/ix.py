@@ -79,6 +79,7 @@ xtrain, xval, ytrain, yval = train_test_split(dataset.Message.values,y,
 
 from tqdm import tqdm
 import numpy as np
+
 glove_vectors = {}
 e = open('glove.840B.300d.txt') # Need the full representation which includes stopwords
 for p in tqdm(e):
