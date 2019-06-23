@@ -179,6 +179,7 @@ import matplotlib.patches as mpatches
 import matplotlib
 %matplotlib inline
 import seaborn as sns
+
 limit=40; start=2; step=6;
 x = range(start, limit, step)
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
@@ -233,6 +234,7 @@ from bokeh.models import HoverTool, CustomJS, ColumnDataSource, Slider
 from bokeh.layouts import column
 from bokeh.palettes import all_palettes
 from sklearn.manifold import TSNE
+
 tsne = TSNE(random_state=2017, perplexity=30) # 5 30 50
 tsne_embedding = tsne.fit_transform(refac_matrix)
 tsne_embedding = pd.DataFrame(tsne_embedding, columns =['x','y'])
