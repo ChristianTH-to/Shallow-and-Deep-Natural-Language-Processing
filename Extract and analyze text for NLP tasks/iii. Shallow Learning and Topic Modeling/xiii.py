@@ -52,8 +52,8 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 from gensim.parsing.preprocessing import STOPWORDS
 from stop_words import get_stop_words
-
 stop_en = stopwords.words('english')
+
 bt_1_dataset['Message'] = bt_1_dataset.Message.map(lambda x: [t for t in x if t not in stop_en])
 bt_1_dataset['Message'] = bt_1_dataset.Message.map(lambda x: [t for t in x if not t in set(get_stop_words('english'))])
 bt_1_dataset['Message'] = bt_1_dataset.Message.map(lambda x: [t for t in x if t not in STOPWORDS])
@@ -169,8 +169,8 @@ from nltk.corpus import stopwords
 #nltk.download('stopwords')
 from gensim.parsing.preprocessing import STOPWORDS
 from stop_words import get_stop_words
-
 stop_en = stopwords.words('english')
+
 bt_2_dataset['Message'] = bt_2_dataset.Message.map(lambda x: [t for t in x if t not in stop_en])
 bt_2_dataset['Message'] = bt_2_dataset.Message.map(lambda x: [t for t in x if not t in set(get_stop_words('english'))])
 bt_2_dataset['Message'] = bt_2_dataset.Message.map(lambda x: [t for t in x if t not in STOPWORDS])
