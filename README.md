@@ -17,13 +17,13 @@ unsupervised latent dirichlet allocation.
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
 
-i. Extraction and Exploration
+i. <b>Extraction and Exploration</b>
 
 	i. Extraction, exploration, feature extraction, initial cleaning & common-word visualization
 	ii. Zipf’s Law
 	iii. Feature distributions by user and more cleaning
 
-ii. Deep Learning
+ii. <b>Deep Learning</b>
 
 	iv. Additional exploration with Word2vec and GloVe
 	v. Softmax, LeakyReLU and Sigmoid visualizations 
@@ -31,7 +31,7 @@ ii. Deep Learning
 	vii. Diagnosing text using edm
 	viii. Attention based bidirectional lstm rnn
 
-iii. Shallow learning and topic modeling
+iii. <b>Shallow learning and topic modeling</b>
 
 	ix. tfidf-cv weighted embeddings trained with: 
 
