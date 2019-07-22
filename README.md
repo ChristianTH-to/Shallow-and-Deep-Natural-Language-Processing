@@ -31,7 +31,7 @@ ii. <b>Deep Learning</b>
 	vii. Diagnosing text using edm
 	viii. Attention based bidirectional lstm rnn
 
-iii. <b>Shallow learning and topic modeling</b>
+iii. <b>Shallow Learning and Topic Modeling</b>
 
 	ix. tfidf-cv weighted embeddings trained with: 
 
