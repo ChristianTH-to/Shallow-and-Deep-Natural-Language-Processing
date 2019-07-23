@@ -81,7 +81,7 @@ model.most_similar('friendship')
 # GloVe vector visualization of co-occurrence probabilities 
 # Using a principal component analysis scatterplot 
 
-# Reference: https://nlp.stanford.edu/pubs/glove.pdf
+# Reference: https://stanford.io/2GqUL8q
 
 import numpy as np
 import matplotlib.pyplot as plt
