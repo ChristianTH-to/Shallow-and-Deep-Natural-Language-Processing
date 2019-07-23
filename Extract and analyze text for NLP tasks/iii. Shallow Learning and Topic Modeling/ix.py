@@ -19,7 +19,9 @@ from sklearn import preprocessing
 lbl_enc = preprocessing.LabelEncoder()
 y = lbl_enc.fit_transform(dataset.Name.values)
 
+
 # Returns every row as a string inside of a list 
+# Reference: https://bit.ly/32OyBa3
 
 data_str = ''
 for i in dataset.itertuples():
