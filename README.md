@@ -21,7 +21,7 @@ i. <b>Extraction and Exploration</b>
 
 	i. Extraction, exploration, feature extraction, initial cleaning & common-word visualization
 	ii. Zipf’s Law
-	iii. Feature distributions by user and more cleaning
+	iii. Feature distributions by user and additional cleaning
 
 ii. <b>Deep Learning</b>
 
