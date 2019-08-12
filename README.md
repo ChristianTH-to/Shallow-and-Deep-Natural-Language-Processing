@@ -33,7 +33,7 @@ ii. <b>Deep Learning</b>
 
 iii. <b>Shallow Learning and Topic Modeling</b>
 
-	ix. tfidf-cv weighted embeddings trained with: 
+	ix. tfidf-cv weighted embeddings trained on engineered features with: 
 
 		i. logistic regression 
 		ii. naive bayes 
