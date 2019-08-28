@@ -16,6 +16,8 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
+Used the final topics to infer which users are predisposed to depressive and other mental states.
+
 
 i. <b>Extraction and Exploration</b>
 
