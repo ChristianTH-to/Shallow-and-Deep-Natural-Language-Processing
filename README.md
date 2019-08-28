@@ -16,7 +16,7 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
-Used final topics to infer users linguistic characteristics and which users are predisposed to certain pathological mental states.
+Used final topics to infer which users are predisposed to certain pathological mental states.
 
 
 i. <b>Extraction and Exploration</b>
