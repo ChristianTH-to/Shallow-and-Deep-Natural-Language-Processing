@@ -16,7 +16,7 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
-Used a combination of final topics and syntactic phrases to determine interests and surmise the mental health of each user.[<a href="https://www.verywellmind.com/a-list-of-psychological-disorders-2794776" rel="nofollow">1</a></li>]
+Used a combination of final topics and syntactic phrases to determine interests and surmise the mental health of each user.[<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">1</a></li>]
 
 
 i. <b>Extraction and Exploration</b>
