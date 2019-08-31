@@ -16,7 +16,7 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
-Used a combination of final topics and syntactic phrases[<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">1</a></li>] to determine interests and surmise the mental health of each user.
+Loosely based on dimensions of the Big Five OCEAN personality model, a combination of the users final topics and syntactic phrases[<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">1</a></li>] were used to determine interests and surmise the mental health of each user.
 
 
 i. <b>Extraction and Exploration</b>
