@@ -16,7 +16,7 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
-Loosely based on dimensions of the Big Five OCEAN personality model, a combination of the users final topics and syntactic phrases[<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">1</a></li>] were used to determine interests and surmise the mental health of each user.
+Loosely based on dimensions of the Big Five OCEAN personality model[<a href="https://positivepsychology.com/big-five-personality-theory" rel="nofollow">1</a></li>] and other sources[<a href="https://www.ncbi.nlm.nih.gov/pubmed/10626371" rel="nofollow">2</a></li>][<a href="https://www.ncbi.nlm.nih.gov/pubmed/10626371" rel="nofollow">3</a></li>][<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.224.4752&rep=rep1&type=pdf" rel="nofollow">4</a></li>][<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5902561/" rel="nofollow">5</a></li>][<a href="https://pdfs.semanticscholar.org/e067/dde0a376facdd160dfcc800ccf58c468863c.pdf" rel="nofollow">6</a></li>][<a href="https://pdfs.semanticscholar.org/6fcb/e173365d31d27585babf9deb99e8f18b1374.pdf" rel="nofollow">7</a></li>], a combination of the users final topics and syntactic phrases[<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">8</a></li>] were used to determine interests and surmise the mental health of each user.
 
 
 i. <b>Extraction and Exploration</b>
