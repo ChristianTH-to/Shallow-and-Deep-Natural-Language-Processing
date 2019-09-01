@@ -6,7 +6,7 @@ users occupying the same group for 7 years.
 
 Cleaned, prepared and transformed semi-structured data into a dataset. 
 
-Performed exploratory analysis using dimensionality reduction techniques PCA and t-SNE. 
+Performed exploratory analysis and engineered features using dimensionality reduction techniques PCA and t-SNE. 
 
 Used multiple frequentist, Bayesian and deep learning classification algorithms to identify 
 unlabeled text weighted by Word2vec and GloVe word embeddings. 
