@@ -43,7 +43,7 @@ iii. <b>Shallow Learning and Topic Modeling</b>
 		iv. support vector machines
 
 	x. Topic modeling with vanilla-lda
-	xi. L-lda implementation with inference via Gibbs sampling
+	xi. Labeled-lda implementation with inference via Gibbs sampling
 	xii. Defined l-lda seeds
 	xiii. Compare distance of user probability distributions
   
