@@ -342,7 +342,6 @@ earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=80, verbose=
 #sm = SMOTE(random_state=12, ratio=1.0)
 #xtrain_pad, ytrain_enc = sm.fit_sample(xtrain_pad,ytrain_enc)
 
-
 # During training, enables the model to treat class 1 as important as class 0
 
 class_weight = {0:1,
