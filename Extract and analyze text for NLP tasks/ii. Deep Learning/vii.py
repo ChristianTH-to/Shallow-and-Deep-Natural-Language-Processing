@@ -16,7 +16,7 @@ messages = df['Message'].fillna('_##_').values
 labels = df['Name'].values
 
 
-# Returns a set of statistics and metrics that says 
+# Returns a set of metrics and statistics that says 
 # how likely it is that any algorithm we train can learn 
 # from the dataset
 
