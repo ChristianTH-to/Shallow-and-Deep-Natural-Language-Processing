@@ -19,8 +19,8 @@ date = pd.to_datetime(dataset['D'],utc=True)
 year = date.dt.year
 
 
-'''Data preprocessing: transform the vector 9 times
-   and apply regex to remove numerals'''
+'''Data preprocessing: transform the Message vector 
+   9 times and apply regex to remove numerals'''
 
 import re
 from nltk.tokenize import RegexpTokenizer
@@ -76,7 +76,7 @@ docs = np.array(dataset['Message']) # comment out array when running t-SNE
       I'm not sure what data type i should use to transform the 
       raw vector. Try an array'''
 
-'''2. I tried putting the transformed vector inside of an array
+'''2. I put the transformed vector inside of an array
       and the data was able to pass through the bi/tri-gram for loop'''
 
 # Add bigrams and trigrams that appear 
@@ -117,7 +117,7 @@ from gensim import corpora, models
 import numpy as np
 np.random.seed(2017)
 
-# Loads data into new variable
+# Loads data into a new variable
 
 texts = dataset['Message'].values
 print('Total Number of documents: %d' % len(texts))
