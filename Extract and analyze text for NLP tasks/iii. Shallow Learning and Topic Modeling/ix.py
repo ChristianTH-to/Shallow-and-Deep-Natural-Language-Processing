@@ -1,4 +1,4 @@
-# Shallow techniques
+# Shallow algorithms
 # TFIDF, Count Vectorization, Naive Bayes, XGBoost
 # Support Vector Machines, Logistic Regression
 
@@ -43,17 +43,17 @@ list_of_tagged_words = nltk.pos_tag(tokenized_text)
     similar to python dictionaries, set_pos transforms 
     list_of_tagged_words into a highly optimized,
     iterable method that will make sure pos_tags is 
-    contained within the object its called, which is 
-    important because we only want the features in 
-    pos_tags included in the final version of  
-    list_of_tagged_words before we split the train 
-    and test sets.'''
+    contained within the object its called. We only 
+    want the features in pos_tags included in the 
+    final version of list_of_tagged_words before we 
+    split the train and test sets.'''
 
 pos_set = (set(list_of_tagged_words))
 
 '''Specifies the parts of speech
    we want to capture and groups 
    them together.''' 
+
 pos_tags = ['PRP','PRP$', 'WP', 
             'WP$','JJ','JJR','VB', 
             'VBD','VBG', 'VBN','VBP', 
@@ -170,7 +170,7 @@ svc_tfidf = Pipeline([("tfidf_vectorizer", TfidfVectorizer(analyzer=lambda x: x,
                                                                                       SVC(kernel="linear"))])
 
 
-'''Both classes vectorizes text by taking the mean 
+'''Both classes vectorize the text by taking the mean 
    of all the  vectors corresponding to individual 
    words in a given vector mapping.''' 
 
@@ -256,14 +256,14 @@ all_models = [('multi_nb', multi_nb),
               ('glove_vectors_tfidf', stacked_r_tree_glove_vectors_tfidf)]
 
 
-# Takes average of each algorithms output via the weighted f1 scoring metric
+# Takes average of each algorithms output via the weighted f1 evaluation metric
 
 from sklearn.model_selection import cross_val_score
 disordered_scores = [(name,cross_val_score(model,xtrain,ytrain,
                                          scoring= 'f1_weighted',
                                          cv=2).mean()) for name,model in all_models]
 
-# Sorts and prints the score of each algorithm
+# Sorts and prints the evaluation score of each algorithm
 
 scores = sorted(disordered_scores, key=lambda x: -x[1])
 print (tabulate(scores, floatfmt=".4f", headers=("model", 'score')))
