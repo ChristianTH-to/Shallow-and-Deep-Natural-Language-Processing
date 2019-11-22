@@ -12,7 +12,7 @@ import pandas as pd
 dataset = pd.read_csv('bt_data_train_set_1_5.csv').fillna('')
 
 
-# Label each user 0: bt_1 and 1: bt_5
+# Label each instance of user bt_1 as 0 and bt_5 as 1
 
 from sklearn import preprocessing
 
@@ -28,7 +28,7 @@ xtrain, xval, ytrain, yval = train_test_split(dataset.Message.values, y,
                                                   test_size=0.1, shuffle=True)
 
 
-# Computing the weight of each class to balance the prediction
+# Computes the weight of each class to balance the prediction
 
 from sklearn.utils import class_weight
 
@@ -57,7 +57,7 @@ e.close()
 print('Found %s word vectors.' % len(embedding_signal)) # Returns embedding progress bar
 
 
-# Transform each users name vector into 1 unique classes for all observations 
+# Transform each users name vector into 1 unique class for all observations 
 
 import keras
 from keras.utils import np_utils
@@ -77,7 +77,7 @@ from keras.preprocessing import sequence, text
 token = text.Tokenizer(num_words=2196017)
 max_len = 30
 
-# Transforms tokenized text to sequence of ints
+# Transforms tokenized text into a sequence of ints
 
 token.fit_on_texts(list(xtrain) + list(xval))
 xtrain_seq = token.texts_to_sequences(xtrain)
@@ -99,7 +99,7 @@ xval_pad = sequence.pad_sequences(xvalid_seq, maxlen=max_len)
 
 word_index = token.word_index
 
-# Create an embedding matrix for the words we have in the dataset
+# Creates an embedding matrix for the words we have in the dataset
 
 embedding_matrix = np.zeros((len(word_index) + 1, 300))
 
@@ -177,7 +177,7 @@ class Attention(Layer):
         return input_shape[0],  self.features_dim
     
 
-# Computing the weight of each class to balance the prediction
+# Computes the weight of each class to balance the prediction
 
 from sklearn.utils import class_weight
 
@@ -188,7 +188,8 @@ class_weights = dict(zip(bt_class_weights, values))
 print(class_weights)
 
 
-# Tensorflow metric wrappers for keras called at .compile
+# Tensorflow's precision, recall and auc metrics wrapped in a function 
+# using the Keras backend engine. The function is called at .compile | https://keras.io/backend/
 
 import tensorflow as tf
 import functools
@@ -229,74 +230,74 @@ def f2_score(y_true, y_pred):
 
 
 
-def tp_score(y_true, y_pred, threshold=0.1):
-    tp_3d = K.concatenate(
-        [
-            K.cast(K.expand_dims(K.flatten(y_true)), 'bool'),
-            K.cast(K.expand_dims(K.flatten(K.greater(y_pred, K.constant(threshold)))), 'bool'),
-            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
-        ], axis=1
-    )
+#def tp_score(y_true, y_pred, threshold=0.1):
+#    tp_3d = K.concatenate(
+#        [
+#            K.cast(K.expand_dims(K.flatten(y_true)), 'bool'),
+#            K.cast(K.expand_dims(K.flatten(K.greater(y_pred, K.constant(threshold)))), 'bool'),
+#            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
+#        ], axis=1
+#    )
 
-    tp = K.sum(K.cast(K.all(tp_3d, axis=1), 'int32'))
+#    tp = K.sum(K.cast(K.all(tp_3d, axis=1), 'int32'))
 
-    return tp
-
-
-def fp_score(y_true, y_pred, threshold=0.1):
-    fp_3d = K.concatenate(
-        [
-            K.cast(K.expand_dims(K.flatten(K.abs(y_true - K.ones_like(y_true)))), 'bool'),
-            K.cast(K.expand_dims(K.flatten(K.greater(y_pred, K.constant(threshold)))), 'bool'),
-            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
-        ], axis=-1
-    )
-
-    fp = K.sum(K.cast(K.all(fp_3d, axis=1), 'int32'))
-
-    return fp
+#    return tp
 
 
-def fn_score(y_true, y_pred, threshold=0.1):
-    fn_3d = K.concatenate(
-        [
-            K.cast(K.expand_dims(K.flatten(y_true)), 'bool'),
-            K.cast(K.expand_dims(K.flatten(K.abs(K.cast(K.greater(y_pred, K.constant(threshold)),
-            	'float') - K.ones_like(y_pred)))), 'bool'),
-            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
-        ], axis=1
-    )
+#def fp_score(y_true, y_pred, threshold=0.1):
+#    fp_3d = K.concatenate(
+#        [
+#            K.cast(K.expand_dims(K.flatten(K.abs(y_true - K.ones_like(y_true)))), 'bool'),
+#            K.cast(K.expand_dims(K.flatten(K.greater(y_pred, K.constant(threshold)))), 'bool'),
+#            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
+#        ], axis=-1
+#    )
 
-    fn = K.sum(K.cast(K.all(fn_3d, axis=1), 'int32'))
+#    fp = K.sum(K.cast(K.all(fp_3d, axis=1), 'int32'))
 
-    return fn
+#    return fp
+
+
+#def fn_score(y_true, y_pred, threshold=0.1):
+#    fn_3d = K.concatenate(
+#        [
+#            K.cast(K.expand_dims(K.flatten(y_true)), 'bool'),
+#            K.cast(K.expand_dims(K.flatten(K.abs(K.cast(K.greater(y_pred, K.constant(threshold)),
+#            	'float') - K.ones_like(y_pred)))), 'bool'),
+#            K.cast(K.ones_like(K.expand_dims(K.flatten(y_pred))), 'bool')
+#        ], axis=1
+#    )
+
+#    fn = K.sum(K.cast(K.all(fn_3d, axis=1), 'int32'))
+
+#    return fn
 
 # Defines precision curve
 
-def precision_score(y_true, y_pred, threshold=0.1):
-    tp = tp_score(y_true, y_pred, threshold)
-    fp = fp_score(y_true, y_pred, threshold)
+#def precision_score(y_true, y_pred, threshold=0.1):
+#    tp = tp_score(y_true, y_pred, threshold)
+#    fp = fp_score(y_true, y_pred, threshold)
 
-    return tp / (tp + fp)
+#    return tp / (tp + fp)
 
 # Defines recall curve
 
-def recall_score(y_true, y_pred, threshold=0.1):
-    tp = tp_score(y_true, y_pred, threshold)
-    fn = fn_score(y_true, y_pred, threshold)
+#def recall_score(y_true, y_pred, threshold=0.1):
+#    tp = tp_score(y_true, y_pred, threshold)
+#    fn = fn_score(y_true, y_pred, threshold)
 
-    return tp / (tp + fn)
+#    return tp / (tp + fn)
 
 # Defines f1 score
 
-def f_score(y_true, y_pred, threshold=0.1, beta=2):
-    tp = tp_score(y_true, y_pred, threshold)
-    fp = fp_score(y_true, y_pred, threshold)
-    fn = fn_score(y_true, y_pred, threshold)
+#def f_score(y_true, y_pred, threshold=0.1, beta=2):
+#    tp = tp_score(y_true, y_pred, threshold)
+#    fp = fp_score(y_true, y_pred, threshold)
+#    fn = fn_score(y_true, y_pred, threshold)
 
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    return (1+beta**2) * ((precision * recall) / ((beta**2)*precision + recall))
+#    precision = tp / (tp + fp)
+#    recall = tp / (tp + fn)
+#    return (1+beta**2) * ((precision * recall) / ((beta**2)*precision + recall))
 
 
 # LSTM with glove embedding layer, one bidirectional lstm layer, one attention layer and one dense layer
@@ -342,19 +343,28 @@ earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=80, verbose=
 #sm = SMOTE(random_state=12, ratio=1.0)
 #xtrain_pad, ytrain_enc = sm.fit_sample(xtrain_pad,ytrain_enc)
 
-# During training, enables the model to treat class 1 as important as class 0
+
+# During training, class_weight allows the model to treat one instance of class 1, 
+# two times as important as one instance of class 0
 
 class_weight = {0:1,
                 1:2} # [0.6470374744715928]
 
+
+# Plots BiLSTMRNN architecture and evaluation metrics
+
 tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
 
-#metrics = Metrics()
+# metrics = Metrics()
 
-# Fit data to the model and initialize training
+# Fits data to the model and initializes training
 
-history = model.fit(xtrain_pad, y=ytrain_enc, batch_size=1024, epochs=1, verbose=1, validation_data=(xval_pad, yval_enc), 
-                    shuffle=True,callbacks=[tensorboard], class_weight=class_weight)
+history = model.fit(xtrain_pad, y=ytrain_enc, 
+                    batch_size=1024, 
+                    epochs=1, verbose=1,
+                    validation_data=(xval_pad, yval_enc), 
+                    shuffle=True,callbacks=[tensorboard], 
+                    class_weight=class_weight)
 
 # Plots score of loss, accuracy, recall, precision, auroc, f1 & f2 metrics
 
@@ -372,8 +382,8 @@ print(history.history['f2_score'])
 print(history.history['val_f2_score'])
 print(history.history['f_score'])
 print(history.history['val_f_score'])
-print(history.history['ck'])
-print(history.history['val_ck'])
+#print(history.history['ck'])
+#print(history.history['val_ck'])
 
 
 # Lstm loss plot
@@ -441,7 +451,7 @@ pyplot.xlabel('threshold')
 pyplot.show()
 
 
-# Tensorflow computed f2_score plot
+# Lstm f2_score plot
 
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
 pyplot.plot(history.history['val_f2_score'], color='red', marker = '.')
@@ -454,7 +464,7 @@ pyplot.legend(['roc','auc'], loc = 'lower right')
 pyplot.show()
 
 
-# Tensorflow computed f_score plot
+# Lstm f_score plot
 
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
 pyplot.plot(history.history['f_score'], color='purple', marker = '.')
