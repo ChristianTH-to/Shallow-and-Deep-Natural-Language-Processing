@@ -9,7 +9,7 @@ Cleaned, prepared and transformed semi-structured data into a dataset.
 Performed exploratory analysis and engineered features using dimensionality reduction techniques PCA and t-SNE. 
 
 Used multiple frequentist, Bayesian and deep learning classification algorithms to identify 
-unlabeled text weighted by Word2vec and GloVe word embeddings. 
+unlabeled text weighted by Word2vec and pretrained word embeddings with GloVe. 
 
 Derived topics and sentiment from unstructured data using semi-supervised and 
 unsupervised latent dirichlet allocation. 
