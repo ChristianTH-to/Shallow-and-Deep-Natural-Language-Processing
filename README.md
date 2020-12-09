@@ -46,6 +46,3 @@ iii. <b>Shallow Learning and Topic Modeling</b>
 	xi. Labeled-lda implementation with inference via Gibbs sampling
 	xii. Defined l-lda seeds
 	xiii. Compare distance of user probability distributions
-  
-  
- You can find the original blog post <a href="https://www.xtiandata.com/single-post/2018/10/26/Shallow-Deep-Natural-Language-Processing" rel="nofollow">here</a></li>.
