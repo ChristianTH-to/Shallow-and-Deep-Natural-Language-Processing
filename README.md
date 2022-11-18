@@ -1,7 +1,7 @@
 ![thumbnail_original-1](https://user-images.githubusercontent.com/29679899/59774825-207b5900-927e-11e9-8560-f8c8c454ec25.png)
 ![thumbnail_original](https://user-images.githubusercontent.com/29679899/59774888-3852dd00-927e-11e9-812d-61dc8d47af1a.png)
 
-Extracted over 300k text documents from Facebook Messenger 
+Extracted over 300k text documents from consented Facebook Messenger 
 users occupying the same group for 7 years. 
 
 Cleaned, prepared and transformed semi-structured data into a dataset. 
@@ -16,7 +16,7 @@ unsupervised latent dirichlet allocation.
 
 Preserved a global view of user topics and distilled each user into a mixture of topics using t-SNE.
 
-Loosely based on dimensions of the Big Five OCEAN personality model[<a href="https://positivepsychology.com/big-five-personality-theory" rel="nofollow">1</a></li>] and other sources[<a href="https://www.ncbi.nlm.nih.gov/pubmed/10626371" rel="nofollow">2</a></li>][<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">3</a></li>][<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.224.4752&rep=rep1&type=pdf" rel="nofollow">4</a></li>][<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5902561/" rel="nofollow">5</a></li>], a combination of the users final topics and syntactic phrases were used to surmise the mental health of selected users.
+Primarily based on discussion with mental health professionals and loosely based on dimensions of the Big Five OCEAN personality model[<a href="https://positivepsychology.com/big-five-personality-theory" rel="nofollow">1</a></li>] and other sources[<a href="https://www.ncbi.nlm.nih.gov/pubmed/10626371" rel="nofollow">2</a></li>][<a href="https://www.aclweb.org/anthology/W16-0307" rel="nofollow">3</a></li>][<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.224.4752&rep=rep1&type=pdf" rel="nofollow">4</a></li>][<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5902561/" rel="nofollow">5</a></li>], a combination of selected users’ final topics and phrases were used to determine interests and identify troubled language signaling distress and possible mental health crisis.
 
 
 i. <b>Extraction and Exploration</b>
