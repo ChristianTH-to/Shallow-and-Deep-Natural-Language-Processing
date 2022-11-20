@@ -55,9 +55,7 @@ dataset["mean_word_len"] = dataset["Message"].apply(lambda x: np.mean([len(w) fo
 # Number of adjectives
 # import nltk
 #pos_list = nltk.pos_tag
-
 #dataset["fraction_adj"] = dataset["Message"].apply(lambda x: len([w for w in str(x).lower().split() in pos_list if w[1] in ('JJ','JJR','JJS')]))
-
 #dataset['fraction_adj'] = dataset.apply(lambda row: fraction_adj(row),axis=1) 
 
 # Plot feature counts
@@ -113,12 +111,15 @@ dataset['num_stopwords'].loc[dataset['num_stopwords']>80] = 80
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
 user1 = ['bt_5']
 user2 = ['bt_1']
+
+
 # Iterate through the both users
 for user in user1:
         subset = dataset[dataset['Name'] == user]
 sns.distplot(subset["num_stopwords"], hist = False, kde = True,color='green',
                  kde_kws = {'shade': True, 'linewidth': 3},label = 'bt_5')
 plt.show()
+
 
 dataset['mean_word_len'].loc[dataset['mean_word_len']>80] = 80 
 plt.figure(figsize=(12,8))
@@ -127,6 +128,7 @@ plt.xlabel('User', fontsize=12)
 plt.ylabel('Average length of words in text', fontsize=12)
 plt.title("Average length of words by User", fontsize=15)
 plt.show()
+
 
 # Part of speech violin plots
 extra_stopwords = []
@@ -141,9 +143,11 @@ for i in range(0, 105185):
     clean_text = [word for word in clean_text if word not in extra_stopwords]
     corpus.append(clean_text)  
 
+        
 all_text_without_sw = ''
 for i in dataset.itertuples():
     all_text_without_sw = all_text_without_sw + str(i.Message)
+
 
 tokenized_text = word_tokenize(all_text_without_sw)
 list_of_tagged_words = nltk.pos_tag(tokenized_text)
