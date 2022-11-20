@@ -1,20 +1,32 @@
 # Violin plots of feature distributions by user
 
-
-# Dependencies
-
+# Stdlib
 import warnings
 warnings.filterwarnings('ignore')
-
-# Data
-
-import pandas as pd
-dataset = pd.read_csv('bt_data_train_set_1_5.csv').fillna('nan')
-
 import string
+import re
+
+# Third party
+import pandas as pd
 import numpy as np
+
+import gensim
+from gensim.parsing.preprocessing import STOPWORDS
+import nltk
+from nltk.tag import pos_tag
+from nltk.stem.porter import PorterStemmer 
 from nltk.corpus import stopwords
 stopwords = stopwords.words('english')
+from stop_words import get_stop_words
+
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+import seaborn as sns
+color = sns.color_palette()
+
+
+# Import data
+dataset = pd.read_csv('bt_data_train_set_1_5.csv').fillna('nan')
 
 # Number of words in the text 
 dataset["num_words"] = dataset["Message"].apply(lambda x: len(str(x).split()))
@@ -48,13 +60,7 @@ dataset["mean_word_len"] = dataset["Message"].apply(lambda x: np.mean([len(w) fo
 
 #dataset['fraction_adj'] = dataset.apply(lambda row: fraction_adj(row),axis=1) 
 
-
 # Plot feature counts
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-color = sns.color_palette()
-
 dataset['num_words'].loc[dataset['num_words']>80] = 80 #truncated for better visuals
 plt.figure(figsize=(12,8))
 sns.pointplot(x='Name', y='num_words', data=dataset)
@@ -103,7 +109,6 @@ plt.ylabel('Number of upper case words in text', fontsize=12)
 plt.title("Number of upper case words by User", fontsize=15)
 plt.show()
 
-from matplotlib.pyplot import figure
 dataset['num_stopwords'].loc[dataset['num_stopwords']>80] = 80 
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
 user1 = ['bt_5']
@@ -115,7 +120,6 @@ sns.distplot(subset["num_stopwords"], hist = False, kde = True,color='green',
                  kde_kws = {'shade': True, 'linewidth': 3},label = 'bt_5')
 plt.show()
 
-
 dataset['mean_word_len'].loc[dataset['mean_word_len']>80] = 80 
 plt.figure(figsize=(12,8))
 sns.violinplot(x='Name', y='mean_word_len', data=dataset)
@@ -125,11 +129,7 @@ plt.title("Average length of words by User", fontsize=15)
 plt.show()
 
 # Part of speech violin plots
-
 extra_stopwords = []
-
-from gensim.parsing.preprocessing import STOPWORDS
-
 corpus = []
 for i in range(0, 105185):
     clean_text = re.sub('[^a-zA-Z]', ' ', str(dataset['Message'][i]))
@@ -145,8 +145,6 @@ all_text_without_sw = ''
 for i in dataset.itertuples():
     all_text_without_sw = all_text_without_sw + str(i.Message)
 
-from nltk.tag import pos_tag
-
 tokenized_text = word_tokenize(all_text_without_sw)
 list_of_tagged_words = nltk.pos_tag(tokenized_text)
 set_pos = (set(list_of_tagged_words))
@@ -154,9 +152,6 @@ nouns = ['PRP', 'PRP$', 'WP', 'WP$','VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',
         'JJ', 'JJR', 'JJS','EX','IN','NN','NNS','NNP','NNPS','CD','CC']
 list_of_words = set(map(lambda tuple_2: tuple_2[0], filter(lambda tuple_2: tuple_2[1] in nouns, set_pos)))
 dataset['pos_pppn'] = dataset['Message'].apply(lambda x: len([w for w in str(x).lower().split() if w in list_of_words]))
-
-
-from matplotlib.pyplot import figure
 
 dataset['pos_pppn'].loc[dataset['pos_pppn']>80] = 80 # truncated for better visuals
 plt.figure(figsize=(12,8))
@@ -169,26 +164,12 @@ plt.ylabel('Number of Prepositional Phrases in Text', fontsize=15)
 plt.title("Number of Prepositional Phrases by User", fontsize=20)
 plt.show()
 
-
 # Cleaning/refining the sample
-
-import pandas as pd
 dataset = pd.read_csv('bt_4.csv').fillna('')
-
 extra_stopwords = []
-
 bt_4_additional_stopwords = extra_stopwords
 
 # List initialization 
-
-import re
-import nltk
-import gensim
-from nltk.corpus import stopwords
-from stop_words import get_stop_words
-from nltk.stem.porter import PorterStemmer 
-from gensim.parsing.preprocessing import STOPWORDS
-
 corpus = []
 for i in range(0, 38954):
     clean_text = re.sub('[^a-zA-Z]', ' ', str(dataset['Message'][i]))
