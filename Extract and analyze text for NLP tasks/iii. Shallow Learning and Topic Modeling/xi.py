@@ -1,12 +1,21 @@
-
 '''References:  
    https://www.aclweb.org/anthology/D09-1026
    http://www.arbylon.net/publications/text-est.pdf
    http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf
    Jiahong Zhou's L-LDA Implementation'''
 
-# Implementation of labeled latent dirichlet allocation (L-LDA) using gibbs sampling
+# Stdlib
+from concurrent import futures
+import copy_reg
+import types
+import os
+import json
 
+# Third party
+import numpy as np
+
+
+# Implementation of labeled latent dirichlet allocation (L-LDA) using gibbs sampling
 class LldaModel:
 
     def __init__(self, alpha_vector="50_div_K", eta_vector=None, labeled_documents=None):
@@ -42,11 +51,11 @@ class LldaModel:
 
         # an iterable of a tuple, contains all doc and their labels
         if labeled_documents is not None:
+         
             self._load_labeled_documents(labeled_documents)
 
         pass
 
-import numpy as np
 
     def _initialize_derivative_fields(self):
         """
@@ -54,8 +63,11 @@ import numpy as np
         """
         self.Doc2TopicCount = np.zeros((self.M, self.K), dtype=int)
         self.Topic2TermCount = np.zeros((self.K, self.T), dtype=int)
+      
         for m in range(self.M):
+            
             for t, z in zip(self.W[m], self.Z[m]):
+               
                 k = z
                 self.Doc2TopicCount[m, k] += 1
                 self.Topic2TermCount[k, t] += 1
@@ -64,6 +76,7 @@ import numpy as np
         self.eta_vector_sum = sum(self.eta_vector)
         self.Topic2TermCountSum = self.Topic2TermCount.sum(axis=1)
 
+      
     def _load_labeled_documents(self, labeled_documents):
         """
         Input labeled corpus, which contains all documents and their corresponding labels
@@ -99,33 +112,45 @@ import numpy as np
         self.LN = len(all_labels) - self.M
 
         self.Lambda = np.zeros((self.M, self.K), dtype=float)
+         
         for m in range(self.M):
+         
             if len(labels_corpus[m]) == 1:
                 labels_corpus[m] = self.topics
+                  
             for label in labels_corpus[m]:
                 k = self.topic_vocabulary[label]
                 self.Lambda[m, k] = 1.0
 
         if self.alpha_vector is None:
+         
             self.alpha_vector = [0.001 for _ in range(self.K)]
+            
         elif type(self.alpha_vector) is str and self.alpha_vector == "50_div_K":
             self.alpha_vector = [50.0/self.K for _ in range(self.K)]
+            
         elif type(self.alpha_vector) is float or type(self.alpha_vector) is int:
             self.alpha_vector = [self.alpha_vector for _ in range(self.K)]
+            
         else:
             message = "error alpha_vector: %s" % self.alpha_vector
             raise Exception(message)
 
         if self.eta_vector is None:
+         
             self.eta_vector = [0.001 for _ in range(self.T)]
+            
         elif type(self.eta_vector) is float or type(self.eta_vector) is int:
             self.eta_vector = [self.eta_vector for _ in range(self.T)]
+            
         else:
             message = "error eta_vector: %s" % self.eta_vector
             raise Exception(message)
 
         self.Z = []
+      
         for m in range(self.M):
+            
             numerator_vector = self.Lambda[m] * self.alpha_vector
             p_vector = 1.0 * numerator_vector / sum(numerator_vector)
             # z_vector is a vector of a document,
@@ -135,8 +160,10 @@ import numpy as np
             self.Z.append(z_vector)
 
         self._initialize_derivative_fields()
+      
         pass
 
+      
     @staticmethod
     def _multinomial_sample(p_vector, random_state=None):
         """
@@ -144,10 +171,13 @@ import numpy as np
         p_vector: the probabilities
         returns a int value
         """
+      
         if random_state is not None:
+            
             return random_state.multinomial(1, p_vector).argmax()
         return np.random.multinomial(1, p_vector).argmax()
 
+   
     def _gibbs_sample_training(self):
         """
         Sample a topic(k) for each word(t) of all documents, Generate a new matrix Z
@@ -186,12 +216,15 @@ import numpy as np
                 self.Topic2TermCount[k, t] += 1
                 self.Topic2TermCountSum[k] += 1
                 count += 1
+                  
         assert count == self.WN
         print "gibbs sample count: ", self.WN
         self.iteration += 1
         self.all_perplexities.append(self.perplexity)
+         
         pass
 
+   
     def _gibbs_sample_inference(self, term_vector, iteration=30):
         """
         Inference with gibbs sampling
@@ -204,7 +237,9 @@ import numpy as np
         p_vector = np.ones(self.K, dtype=int)
         p_vector = p_vector * 1.0 / sum(p_vector)
         z_vector = [LldaModel._multinomial_sample(p_vector) for _ in term_vector]
+      
         for n, t in enumerate(term_vector):
+            
             k = z_vector[n]
             doc_topic_count[k] += 1
             self.Topic2TermCount[k, t] += 1
@@ -213,7 +248,9 @@ import numpy as np
         doc_m_alpha_vector = self.alpha_vector
 
         for i in range(iteration):
+            
             for n, t in enumerate(term_vector):
+               
                 k = z_vector[n]
                 doc_topic_count[k] -= 1
                 self.Topic2TermCount[k, t] -= 1
@@ -242,6 +279,7 @@ import numpy as np
                 self.Topic2TermCountSum[k] += 1
 
         for n, t in enumerate(term_vector):
+         
             k = z_vector[n]
             self.Topic2TermCount[k, t] -= 1
             self.Topic2TermCountSum[k] -= 1
@@ -249,7 +287,9 @@ import numpy as np
         numerator_theta_vector = doc_topic_count + doc_m_alpha_vector
         denominator_theta = sum(numerator_theta_vector)
         theta_new = 1.0 * numerator_theta_vector / denominator_theta
+      
         return theta_new
+      
 
     def _gibbs_sample_inference_multi_processors(self, term_vector, iteration=30):
         """
@@ -268,7 +308,9 @@ import numpy as np
         p_vector = np.ones(self.K, dtype=int)
         p_vector = p_vector * 1.0 / sum(p_vector)
         z_vector = [LldaModel._multinomial_sample(p_vector, random_state=random_state) for _ in term_vector]
+         
         for n, t in enumerate(term_vector):
+         
             k = z_vector[n]
             doc_topic_count[k] += 1
             topic2term_count[k, t] += 1
@@ -277,7 +319,9 @@ import numpy as np
         doc_m_alpha_vector = self.alpha_vector
 
         for i in range(iteration):
+            
             for n, t in enumerate(term_vector):
+               
                 k = z_vector[n]
                 doc_topic_count[k] -= 1
                 topic2term_count[k, t] -= 1
@@ -322,11 +366,14 @@ import numpy as np
         returns: None
         """
         for i in range(iteration):
+         
             if log:
                 print "after iteration: %s, perplexity: %s" % (self.iteration, self.perplexity)
             self._gibbs_sample_training()
+            
         pass
 
+   
     def inference(self, document, iteration=30, times=10):
     
         """
@@ -352,8 +399,10 @@ import numpy as np
                                       key=lambda topic_probability: topic_probability[1],
                                       reverse=True)
         return sorted_doc_topic_new
+   
         pass
 
+   
     def inference_multi_processors(self, document, iteration=30, times=8, max_workers=8):
         
         """
@@ -365,15 +414,17 @@ import numpy as np
         returns: theta_new, a vector, theta_new[k] is the probability of doc(term_vector) to be generated from topic k
                  theta_new, a theta_vector, the doc-topic distribution
         """
-from concurrent import futures
-import copy_reg
-import types
+
 
         def _pickle_method(m):
+         
             if m.im_self is None:
+               
                 return getattr, (m.im_class, m.im_func.func_name)
+               
             else:
                 return getattr, (m.im_self, m.im_func.func_name)
+               
         copy_reg.pickle(types.MethodType, _pickle_method)
 
         words = document.split()
@@ -385,6 +436,7 @@ import types
             
             res = executor.map(self._gibbs_sample_inference_multi_processors, term_vectors, iterations)
         theta_new_accumulation = np.zeros(self.K, float)
+      
         for theta_new in res:
             theta_new_accumulation += theta_new
         theta_new = 1.0 * theta_new_accumulation / times
@@ -394,8 +446,10 @@ import types
                                       key=lambda topic_probability: topic_probability[1],
                                       reverse=True)
         return sorted_doc_topic_new
+   
         pass
 
+   
     def beta_k(self, k):
         """
         topic-term distribution
@@ -405,8 +459,10 @@ import types
         numerator_vector = self.Topic2TermCount[k] + self.eta_vector
         
         denominator = sum(numerator_vector)
+         
         return 1.0 * numerator_vector / denominator
 
+   
     def theta_m(self, m):
         """
         doc-topic distribution
@@ -416,8 +472,10 @@ import types
         numerator_vector = self.Doc2TopicCount[m] + self.alpha_vector * self.Lambda[m]
         
         denominator = sum(numerator_vector)
+         
         return 1.0 * numerator_vector / denominator
 
+   
     @property
     def beta(self):
         """
@@ -430,10 +488,12 @@ import types
         # column vector
     
         denominator_vector = numerator_matrix.sum(axis=1).reshape(self.K, 1)
+      
         return 1.0 * numerator_matrix / denominator_vector
 
         pass
 
+      
     @property
     def theta(self):
         """
@@ -447,8 +507,10 @@ import types
         # column vector
 
         return 1.0 * numerator_matrix / denominator_vector
+   
         pass
 
+   
     @property
     def log_perplexity(self):
         """
@@ -459,24 +521,33 @@ import types
         
         log_likelihood = 0
         word_count = 0
+         
         for m, theta_m in enumerate(self.theta):
+         
             for t in self.W[m]:
+               
                 likelihood_t = np.inner(beta[:, t], theta_m)
                 
                 log_likelihood += -np.log(likelihood_t)
                 word_count += 1
+               
         assert word_count == self.WN, "word_count: %s\tself.WN: %s" % (word_count, self.WN)
+      
         return 1.0 * log_likelihood / self.WN
 
+      
     @property
     def perplexity(self):
         """
         perplexity of LDA topic model
         :return: a float value, perplexity = exp{log_perplexity}
         """
+      
         return np.exp(self.log_perplexity)
 
+      
     def __repr__(self):
+      
         return "\nLabeled-LDA Model:\n" \
                "\tK = %s\n" \
                "\tM = %s\n" \
@@ -487,8 +558,10 @@ import types
                "\teta = %s\n" \
                "\tperplexity = %s\n" \
                "\t" % (self.K, self.M, self.T, self.WN, self.LN, self.alpha_vector[0], self.eta_vector[0], self.perplexity)
+      
         pass
 
+      
     class SaveModel:
         def __init__(self, save_model_dict=None):
             self.alpha_vector = []
@@ -511,14 +584,13 @@ import types
             self.Lambda = None
 
             if save_model_dict is not None:
+               
                 self.__dict__ = save_model_dict
+                  
         pass
 
+   
     @staticmethod
-
-import os
-import json
-
     def _read_object_from_file(file_name):
         """
         read an object from json file
@@ -526,16 +598,20 @@ import json
         returns: None if file doesn't exist or can not convert to an object by json, else return the object
         """
         if os.path.exists(file_name) is False:
+         
             print ("Error read path: [%s]" % file_name)
             return None
+         
         with open(file_name, 'r') as f:
             try:
                 obj = json.load(f)
             except Exception:
                 print ("Error json: [%s]" % f.read()[0:10])
+                  
                 return None
         return obj
 
+   
     @staticmethod
     def _write_object_to_file(file_name, target_object):
         """
@@ -550,14 +626,16 @@ import json
             with open(file_name, "w") as f:
                 json.dump(target_object, f, skipkeys=False, ensure_ascii=False, check_circular=True, allow_nan=True, cls=None, indent=True, separators=None, encoding="utf-8", default=None, sort_keys=False)
         except Exception, e:
+         
             message = "Write [%s...] to file [%s] error: json.dump error" % (str(target_object)[0:10], file_name)
             print ("%s\n\t%s" % (message, e.message))
             print "e.message: ", e.message
+            
             return False
         else:
-            
             return True
 
+         
     @staticmethod
     def _find_and_create_dirs(dir_name):
         """
@@ -566,9 +644,12 @@ import json
         :return: the name of dir
         """
         if os.path.exists(dir_name) is False:
+            
             os.makedirs(dir_name)
+            
         return dir_name
 
+   
     def save_model_to_dir(self, dir_name, save_derivative_properties=False):
         """
         save model to directory dir_name
@@ -605,13 +686,16 @@ import json
         # Save derivative properties
 
         if save_derivative_properties:
+         
             np.save(os.path.join(dir_name, "Doc2TopicCount.npy"), self.Doc2TopicCount)
             np.save(os.path.join(dir_name, "Topic2TermCount.npy"), self.Topic2TermCount)
             np.save(os.path.join(dir_name, "alpha_vector_Lambda.npy"), self.alpha_vector_Lambda)
             np.save(os.path.join(dir_name, "eta_vector_sum.npy"), self.eta_vector_sum)
             np.save(os.path.join(dir_name, "Topic2TermCountSum.npy"), self.Topic2TermCountSum)
+            
         pass
 
+   
     def load_model_from_dir(self, dir_name, load_derivative_properties=True):
         """
         Load model from directory dir_name
@@ -641,6 +725,7 @@ import json
 
         # Load load_derivative properties
         if load_derivative_properties:
+         
             try:
                 self.Doc2TopicCount = np.load(os.path.join(dir_name, "Doc2TopicCount.npy"))
                 self.Topic2TermCount = np.load(os.path.join(dir_name, "Topic2TermCount.npy"))
@@ -652,8 +737,10 @@ import json
                 self._initialize_derivative_fields()
         else:
             self._initialize_derivative_fields()
+            
         pass
 
+   
     def update(self, labeled_documents=None):
         """
         Update model with labeled documents, incremental update
@@ -661,6 +748,7 @@ import json
         """
         self.all_perplexities = []
         if labeled_documents is None:
+         
             pass
 
         new_labels = []
@@ -693,7 +781,9 @@ import json
 
         
         new_w_vectors = [[self.vocabulary[term] for term in doc_words] for doc_words in new_doc_corpus]
+         
         for new_w_vector in new_w_vectors:
+         
             self.W.append(new_w_vector)
 
         old_M = self.M
@@ -711,7 +801,9 @@ import json
 
         old_Lambda = self.Lambda
         self.Lambda = np.zeros((self.M, self.K), dtype=float)
+      
         for m in range(self.M):
+            
             if m < old_M:
 
                 # If the old document has no topic, we also init it to all topics here
@@ -744,8 +836,10 @@ import json
             self.Z.append(z_vector)
 
         self._initialize_derivative_fields()
+      
         pass
 
+      
     @staticmethod
     def _extend_matrix(origin=None, shape=None, padding_value=0):
         """
@@ -758,15 +852,20 @@ import json
         new_matrix = np.zeros(shape, dtype=origin.dtype)
 
         for row in range(new_matrix.shape[0]):
+         
             for col in range(new_matrix.shape[1]):
+               
                 if row < origin.shape[0] and col < origin.shape[0]:
+                     
                     new_matrix[row, col] = origin[row, col]
                 else:
                     new_matrix[row, col] = padding_value
 
         return new_matrix
+   
         pass
 
+   
     @property
     def is_convergent(self):
         """
@@ -774,9 +873,13 @@ import json
         :return: True if model is convergent
         """
         if len(self.all_perplexities) < 10:
+         
             return False
+         
         perplexities = self.all_perplexities[-10:]
+      
         if max(perplexities) - min(perplexities) > 0.5:
+            
             return False
         return True
 
