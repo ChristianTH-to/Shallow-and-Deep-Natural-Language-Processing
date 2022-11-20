@@ -1,18 +1,52 @@
 # Topic modeling using vanilla latent dirichlet allocation
 
-
-# Dependencies
-
+# Stdlib
 import warnings
 warnings.filterwarnings("ignore")
-warnings.filterwarnings("ignore", category=DeprecationWarning) 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+import re
+from tabulate import tabulate
+
+# Third party
+import pandas as pd
+import numpy as np
+np.random.seed(2017)
+
+from sklearn.manifold import TSNE
+
+from nltk.tokenize import RegexpTokenizer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.corpus import stopwords
+stop_en = stopwords.words('english')
+from gensim.models import CoherenceModel
+from gensim.models.ldamodel import LdaModel
+from gensim.models import Phrases
+from gensim.parsing.preprocessing import STOPWORDS
+from stop_words import get_stop_words
+from gensim import corpora, models
+from gensim.models import CoherenceModel
+
+import seaborn as sns
 from bokeh.io import output_notebook
 output_notebook()
 
+from bokeh.plotting import figure, show
+from bokeh.models import HoverTool, CustomJS, ColumnDataSource, Slider
+from bokeh.layouts import column
+from bokeh.palettes import all_palettes
 
-# Load data 
+import pyLDAvis.gensim
+pyLDAvis.enable_notebook()
+pyLDAvis.gensim.prepare(ldamodel, corpus, dictionary)
 
-import pandas as pd
+from matplotlib.pyplot import figure
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib
+%matplotlib inline
+
+
+# Import data 
 dataset = pd.read_csv('bt_1.csv').fillna('0') 
 
 date = pd.to_datetime(dataset['D'],utc=True)
@@ -22,8 +56,6 @@ year = date.dt.year
 '''Data preprocessing: transform the Message vector 
    9 times and apply regex to remove numerals'''
 
-import re
-from nltk.tokenize import RegexpTokenizer
 dataset['Message'] = dataset.Message.map(lambda x: re.sub(r'\d+', '', x))
 
 # Convert words to lowercase
@@ -35,7 +67,6 @@ dataset['Message'] = dataset.Message.map(lambda x: RegexpTokenizer(r'\w+').token
 print(dataset['Message'][0][:25])
 
 # Stem all words in the vector
-from nltk.stem.snowball import SnowballStemmer
 snowball = SnowballStemmer("english")  
 dataset['Message'] = dataset.Message.map(lambda x: [snowball.stem(token) for token in x])
 print(dataset['Message'][0][:25])
@@ -48,11 +79,6 @@ print(dataset['Message'][0][:25])
 
 
 # Remove stopwords from vector
-
-from gensim.parsing.preprocessing import STOPWORDS
-from stop_words import get_stop_words
-from nltk.corpus import stopwords
-stop_en = stopwords.words('english')
 extra_stopwords = []
 dataset['Message'] = dataset.Message.map(lambda x: [t for t in x if t not in stop_en])
 dataset['Message'] = dataset.Message.map(lambda x: [t for t in x if not t in set(get_stop_words('english'))])
@@ -61,14 +87,11 @@ dataset['Message'] = dataset.Message.map(lambda x: [t for t in x if t not in ext
 print(dataset['Message'][0][:25])
 
 # Remove words with less than 2 characters
-
 dataset['Message'] = dataset.Message.map(lambda x: [t for t in x if len(t) > 1])
 print(dataset['Message'][0][:25])
 
 
 # Puts the preprocessed text into an array
-
-import numpy as np
 docs = np.array(dataset['Message']) # comment out array when running t-SNE
 
 
@@ -82,20 +105,26 @@ docs = np.array(dataset['Message']) # comment out array when running t-SNE
 # Add bigrams and trigrams that appear 
 # more than 10 times to docs 
 
-from gensim.models import Phrases
 bigram = Phrases(docs, min_count=10)
 trigram = Phrases(bigram[docs])
 quadgram = Phrases(trigram[docs])
 quingram = Phrases(quadgram[docs])
 sexgram = Phrases(quingram[docs]) 
 
+
 for idx in range(len(docs)):
+   
     for token in bigram[docs[idx]]:
+         
         if '_' in token:
+         
             # Token is a bigram, add to document.
             docs[idx].append(token)
+            
     for token in trigram[docs[idx]]:
+      
         if '_' in token:
+            
             # Token is a trigram, add to document.
             docs[idx].append(token)
 #    for token in quadgram[docs[idx]]:
@@ -111,14 +140,8 @@ for idx in range(len(docs)):
 #            # Token is a sexgram, add to document.
 #            docs[idx].append(token)   
 
-# Dependencies
-
-from gensim import corpora, models
-import numpy as np
-np.random.seed(2017)
 
 # Loads data into a new variable
-
 texts = dataset['Message'].values
 print('Total Number of documents: %d' % len(texts))
 
@@ -138,8 +161,6 @@ corpus = [dictionary.doc2bow(text) for text in texts]
 
 
 # Computes corpora coherence score  
-
-from gensim.models import CoherenceModel
 def compute_coherence_values(dictionary, corpus, texts, limit, start=2, step=3):
     """
     Compute c_v coherence for various number of topics
@@ -159,7 +180,9 @@ def compute_coherence_values(dictionary, corpus, texts, limit, start=2, step=3):
 
     coherence_values = []
     model_list = []
+      
     for num_topics in range(start, limit, step):
+      
         model=LdaModel(corpus=corpus, id2word=dictionary, num_topics=num_topics)
         model_list.append(model)
         coherencemodel = CoherenceModel(model=model, texts=texts, dictionary=dictionary, coherence='c_v')
@@ -170,16 +193,8 @@ def compute_coherence_values(dictionary, corpus, texts, limit, start=2, step=3):
 model_list, coherence_values = compute_coherence_values(dictionary=dictionary, corpus=corpus, 
                                                         texts=texts, start=2, limit=40, step=6)
 
+
 # Coherence score plot
-
-from matplotlib.pyplot imp
-ort figure
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import matplotlib
-%matplotlib inline
-import seaborn as sns
-
 limit=40; start=2; step=6;
 x = range(start, limit, step)
 figure(num=None, figsize=(12, 10), dpi=80, facecolor='w', edgecolor='k')
@@ -191,50 +206,30 @@ plt.show()
 
 
 # LDA model extracts topics from the corpus
-
-from gensim.models.ldamodel import LdaModel
 ldamodel = models.ldamodel.LdaModel(corpus, id2word=dictionary, 
                                     num_topics=8, passes=100, 
                                     iterations=400, minimum_probability=0)
 
 # prints coherence score
-
-from gensim.models import CoherenceModel
 cm = CoherenceModel(model=ldamodel,texts=texts,dictionary=dictionary,coherence='c_v')
 print(cm.get_coherence())
 
 # prints topics
-
-from tabulate import tabulate
 topics = ldamodel.print_topics(num_topics=30,num_words=6)
 bt_1_topics = sorted(topics)
 print (tabulate(bt_1_topics, floatfmt=".4f", headers=("#", 'topics'), tablefmt="fancy_grid"))
 
 
 # LDA visualization tool
-
-import pyLDAvis.gensim
-pyLDAvis.enable_notebook()
-pyLDAvis.gensim.prepare(ldamodel, corpus, dictionary)
-
 # Refactors the output of LDA model into a numpy matrix
-
 refac_matrix = np.array([[y for (x,y) in ldamodel[corpus[i]]] for i in range(len(corpus))])
 
 # Threshold filters out unconfident topics
-
 threshold = 0.5
 _idx = np.amax(refac_matrix, axis=1) > threshold  # idx of doc that above the threshold
 refac_matrix = refac_matrix[_idx]
 
 # Dimentionality reduction gives us a better plot
-
-from bokeh.plotting import figure, show
-from bokeh.models import HoverTool, CustomJS, ColumnDataSource, Slider
-from bokeh.layouts import column
-from bokeh.palettes import all_palettes
-from sklearn.manifold import TSNE
-
 tsne = TSNE(random_state=2017, perplexity=30) # 5 30 50
 tsne_embedding = tsne.fit_transform(refac_matrix)
 tsne_embedding = pd.DataFrame(tsne_embedding, columns =['x','y'])
@@ -247,6 +242,7 @@ dataset['Date'] = pd.to_datetime(dataset.Date)
    You can move your mouse over a point
    to see specific words clustered in 
    their respective topics'''
+
 
 source = ColumnDataSource(
         data=dict(
@@ -272,6 +268,7 @@ tools_tsne = [hover_tsne, 'pan', 'wheel_zoom', 'reset']
 plot_tsne = figure(plot_width=700, plot_height=700, tools=tools_tsne, title='bt_1')
 plot_tsne.circle('x', 'y', size='size', fill_color='colors', 
                  alpha='alpha', line_alpha=0, line_width=0.01, source=source, name="df")
+
 
 callback = CustomJS(args=dict(source=source), code="""
     var data = source.data;
