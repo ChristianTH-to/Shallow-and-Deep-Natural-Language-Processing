@@ -115,6 +115,7 @@ user2 = ['bt_1']
 
 # Iterate through the both users
 for user in user1:
+        
         subset = dataset[dataset['Name'] == user]
 sns.distplot(subset["num_stopwords"], hist = False, kde = True,color='green',
                  kde_kws = {'shade': True, 'linewidth': 3},label = 'bt_5')
@@ -133,7 +134,9 @@ plt.show()
 # Part of speech violin plots
 extra_stopwords = []
 corpus = []
+
 for i in range(0, 105185):
+        
     clean_text = re.sub('[^a-zA-Z]', ' ', str(dataset['Message'][i]))
     clean_text = clean_text.lower()
     clean_text = clean_text.split()
@@ -175,7 +178,9 @@ bt_4_additional_stopwords = extra_stopwords
 
 # List initialization 
 corpus = []
+
 for i in range(0, 38954):
+        
     clean_text = re.sub('[^a-zA-Z]', ' ', str(dataset['Message'][i]))
     clean_text = clean_text.lower()
     clean_text = clean_text.split()
