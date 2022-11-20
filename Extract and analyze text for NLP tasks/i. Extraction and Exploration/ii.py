@@ -5,6 +5,8 @@ import re
 
 # Third party
 import pandas as pd
+
+import seaborn as sns
 import matplotlib.pyplot as plt
 %matplotlib inline
 
@@ -26,5 +28,4 @@ word_counts['bt_2000_word_rank'] = word_counts.log.rank(ascending=False)
 # Plot Zipf's Law
 f, ax = plt.subplots(figsize=(12, 12))
 ax.set(xscale="log", yscale="log")
-import seaborn as sns
 sns.regplot("log", "bt_2000_word_rank", word_counts, ax=ax, scatter_kws={"s": 100})
