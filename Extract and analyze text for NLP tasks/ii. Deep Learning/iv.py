@@ -92,12 +92,10 @@ g2w2v = 'glove.840B.300d.word2vec.txt'
 model = KeyedVectors.load_word2vec_format(g2w2v, binary=False)
 model.most_similar('friendship')
 
+
 # GloVe vector visualization of co-occurrence probabilities 
 # Using a principal component analysis scatterplot 
 # Reference: https://stanford.io/2GqUL8q
-
-
-
 
 display_pca_scatterplot(model, ['ice','steam','solid','gas','water','fashion'])
 
