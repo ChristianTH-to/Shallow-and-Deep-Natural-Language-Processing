@@ -7,7 +7,7 @@ from collections import Counter
 import urllib
 from urllib.request import Request
 
-# Thirdparty
+# Third party
 import bs4
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -21,9 +21,12 @@ import seaborn as sns
 def cleanup_text(docs, logging=False):
     texts = []
     counter = 1
+    
     for doc in docs:
+        
         if counter % 1000 == 0 and logging:
             print("Processed %d out of %d documents." % (counter, len(docs)))
+            
         counter += 1
         doc = nlp(doc, disable=['parser', 'ner'])
         tokens = [tok.lemma_.lower().strip() for tok in doc if tok.lemma_ != '-PRON-']
@@ -33,6 +36,7 @@ def cleanup_text(docs, logging=False):
         tokens = re.sub("(^|\W)\d+($|\W)", " ", tokens)
         tokens = re.sub('[^A-Za-z0-9]+', '', tokens)
         texts.append(tokens)
+        
     return pd.Series(texts)
 
 
@@ -54,6 +58,7 @@ for data_name in data_name:
     d.writerow(names)
 print(names)
 
+
 # Extract users dates & times
 d = csv.writer(open('bt_date_data_R.csv', 'w'))
 d.writerow(['Date & Time'])
@@ -63,6 +68,7 @@ for data_date_time in data_date_time:
     dates_times = data_date_time.contents
     d.writerow(dates_times)  
 print(dates_times) 
+
 
 # Extract users messages
 m_data = soup.div(class_ = '_3-96 _2let')
@@ -76,6 +82,7 @@ for data_message in data_message:
     d.writerow([messages])
     print([messages])
 print([messages])
+
 
 # Initial data exploration & feature extraction
 dataset = pd.read_csv('bt_fb_messenger_data.csv').fillna('')
