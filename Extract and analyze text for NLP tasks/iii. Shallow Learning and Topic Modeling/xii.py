@@ -1,10 +1,10 @@
 # Using l-lda to seed topic output
 
-
+# Relative
 import model.labeled_lda as llda
 
-# Document topics and seeds
 
+# Document topics and seeds
 labeled_documents = [("never_forget cop holy_crap holy_fuck lol", ["true_god"]),
                      ("smoke drugs art color bong based sound lit", ["weed"]),
                      ("cat awesome my_wife gold austin_powers max_mojo", ["million_dollars"]),
@@ -12,15 +12,13 @@ labeled_documents = [("never_forget cop holy_crap holy_fuck lol", ["true_god"]),
                      ("plus die kill awful working hate dead job", ["negative, death"])]
 
 # New Labeled LDA model
-
 # llda_model = llda.LldaModel(labeled_documents=labeled_documents, alpha_vector="50_div_K", eta_vector=0.001)
 # llda_model = llda.LldaModel(labeled_documents=labeled_documents, alpha_vector=0.02, eta_vector=0.002)
 llda_model = llda.LldaModel(labeled_documents=labeled_documents)
 print llda_model
 
 
-# training
-
+# Train
 # llda_model.training(iteration=10, log=True)
 while True:
 
@@ -32,17 +30,16 @@ while True:
 
         break
 
+        
 # Update
-
 print "before updating: ", llda_model
 
 update_labeled_documents = [("cat awesome my_wife gold austin_powers max_mojo", ["million_dollars"])]
 llda_model.update(labeled_documents=update_labeled_documents)
-
 print "after updating: ", llda_model
 
-# Train again
 
+# Train again
 # llda_model.training(iteration=10, log=True)
 while True:
 
@@ -55,16 +52,15 @@ while True:
 
         break
 
+        
 # Inference
 # note: the resulting topics may be different from training, because gibbs sampling is a random algorithm
-
 document = "believe feel love dream fun looking_forward trust plus die kill awful working hate dead job"
 # topics = llda_model.inference(document=document, iteration=10, times=10)
 topics = llda_model.inference_multi_processors(document=document, iteration=10, times=10)
 print topics
 
 # Save to disk
-
 save_model_dir = "../data/model"
 # llda_model.save_model_to_dir(save_model_dir, save_derivative_properties=True)
 llda_model.save_model_to_dir(save_model_dir)
