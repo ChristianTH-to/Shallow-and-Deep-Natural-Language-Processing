@@ -41,6 +41,7 @@ import matplotlib.pyplot as pyplot
 class Attention(Layer):
     def __init__(self, step_dim, W_regularizer=None, b_regularizer=None,
                  W_constraint=None, b_constraint=None,bias=True, **kwargs):
+        super(Attention, self).__init__(**kwargs)
       
         self.supports_masking = True
         self.init = initializers.get('glorot_uniform')
@@ -51,7 +52,6 @@ class Attention(Layer):
         self.bias = bias
         self.step_dim = step_dim
         self.features_dim = 0
-        super(Attention, self).__init__(**kwargs)
 
         
     def build(self, input_shape):
