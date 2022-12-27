@@ -225,22 +225,22 @@ bt_2_ldamodel = models.ldamodel.LdaModel(bt_2_corpus, id2word=bt_2_dictionary,al
                                     num_topics=32, passes=100, iterations=400, minimum_probability=0)
 
 # bt_1 topics
-bt_1_topics = ['black pipe','cleveland','rib','gay',
+bt_1_topics = ['','','rib','gay',
              'fucking','love','feel', 'free', 'party',
              'worth', 'hoke','happy','foot','tv','weed',
-             'hard paint','good luck','olga','hair','gas',
+             'hard paint','good luck','','hair','gas',
              'sex','especially','pretty','hope','basically',
-             'dream','hit','bit','ben krenke','weird','saying',
+             'dream','hit','bit','','weird','saying',
              'okay','doesnt','understand','fuck','job','hard',
              'night','weekend','fucked','sorry','school','cheap',
              'literally','crazy','mom','year_old','home','year',
              'old','bitch','song']
 # bt_2 topics
-bt_2_topics = ['black pipe','bike','hard','suck','dick','fart noise',
+bt_2_topics = ['','bike','hard','suck','dick','fart noise',
               'life','buy','ride','sorry','nah','working','easy',
               'worst','comment','win','pissed','interview','bad',
               'high','game','rib','drink','fast','dog','smoke weed',
-              'kit','happy birthday','apparently','lol','cleveland','sweet',
+              'kit','happy birthday','apparently','lol','','sweet',
               'hang','summer','get paper','good','jesus christ','idea',
               'gay','dumb','jesus','sound','god damn','house','health insurance',
               'stock','set nickname']
